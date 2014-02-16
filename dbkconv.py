@@ -85,6 +85,7 @@ reader = csv.reader(io.StringIO(csv_s), delimiter=";")
 # Prepare to write to stdout
 writer = csv.writer(sys.stdout)
 
+# Write CSV header
 writer.writerow(["Date", "Payee", "Category", "Memo", "Outflow", "Inflow"])
 
 # Convert all lines and output
