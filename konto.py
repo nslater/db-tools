@@ -8,6 +8,59 @@ import datetime
 
 import chardet
 
+def help():
+    "Print usage information and exit"
+    print("Usage: %s [-a|-c] < FILE")
+    sys.exit(1)
+
+def error(msg):
+    "Print error and exit"
+    print("Error: %s" % msg)
+    sys.exit(1)
+
+# Check that stdin is attached
+if sys.stdin.isatty():
+    error("nothing attached to stdin")
+
+# Grab our flag
+try:
+    flag = sys.argv[1].replace("-", "")
+except:
+    help()
+
+def fmt_date(date):
+    "Switch date format from American to European"
+    date = datetime.datetime.strptime(date, "%m/%d/%Y")
+    date = date.strftime("%d/%m/%Y")
+    return date
+
+def payee(str):
+    "Get payee from transaction details"
+    # Remove any word with numbers in it
+    # Horrible bodge, but better than nothing!
+    return " ".join(s for s in str.split() if not any(c.isdigit() for c in s))
+
+def unsign(str):
+    "Get unsigned number"
+    # YNAB doesn't like signed values
+    return str.replace("-", "").strip()
+
+def convert_account(date, cleared, desc, debit, credit, cur):
+    "Convert from Deutsche Bank account format to YNAB format"
+    return [fmt_date(date), payee(desc), "", desc, unsign(debit), credit]
+
+def convert_cc(date, cleared, payee, for_cur, for_debit, rate, debit, cur):
+    "Convert from Deutsche Bank credit card format to YNAB format"
+    return [fmt_date(date), payee, "", "", unsign(debit), ""]
+
+# Check for valid flag and set up convert function
+if flag == "a":
+    convert = convert_account
+elif flag == "c":
+    convert = convert_cc
+else:
+    help()
+
 # Read stdin in binary mode
 in_file_b = sys.stdin.buffer.read()
 
@@ -26,25 +79,6 @@ csv_s = "\n".join(csv_lines)
 
 # Parse as a CSV file
 reader = csv.reader(io.StringIO(csv_s), delimiter=";")
-
-# Input file looks like this:
-# Book, Cleared, Details, Debit, Credit, Currency
-
-# Output should look like this:
-# Date, Payee, Category, Memo, Outflow, Inflow
-
-def convert(booked, cleared, details, debit, credit, currency):
-    "Convert from Deutsche Bank format to YNAB format"
-    # Convert date format from American to European
-    date = datetime.datetime.strptime(booked, "%m/%d/%Y")
-    date = date.strftime("%d/%m/%Y")
-    # Remove any word with numbers in it
-    # Horrible bodge, but better than nothing!
-    payee = " ".join(
-        s for s in details.split() if not any(c.isdigit() for c in s))
-    # YNAB doesn't like signed values
-    debit = debit.replace("-", "")
-    return [date, payee, "", details, debit, credit]
 
 # Prepare to write to stdout
 writer = csv.writer(sys.stdout)
