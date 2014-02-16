@@ -10,18 +10,23 @@ I happen to use [You Need A Budget](http://www.youneedabudget.com/) (YNAB) for m
 
 If you're using a different tool, and would like to collaborate, I'd love to receive pull requests!
 
-## konto.py
+## convert.py
 
 ### Purpose
 
-Convert a DBK personal account CSV file to a YNAB account CSV file.
+Convert a DBK transaction CSV file to a YNAB account CSV file.
 
 ### Use
 
-Invoke like so:
+For account transactions, run:
 
 ```
-./konto.py < Transactions.csv
+./konto.py -a < Transactions.csv
+```
+For credit card transactions, run:
+
+```
+./konto.py -c < Transactions.csv
 ```
 
 This will output a reformatted CSV file for use with YNAB.
