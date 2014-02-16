@@ -4,7 +4,7 @@ Tools for working with Deutsche Bank file formats
 
 ## Introduction
 
-Deutsche Bank allows you to download your account transactions, but the file formats they use are poorly structured and impossible to use with standard personal accounting software.
+Deutsche Bank (DBK) allows you to download your account transactions, but the file formats they use are poorly structured and impossible to use with standard personal accounting software.
 
 I happen to use [You Need A Budget](http://www.youneedabudget.com/) (YNAB) for my personal finances, so these tools have been written to output files that YNAB understands.
 
