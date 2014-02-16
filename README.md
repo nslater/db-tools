@@ -4,9 +4,11 @@ Tools for working with Deutsche Bank file formats
 
 ## Introduction
 
-Deutsche Bank allows you to download account transactions, but the file formats they use are poorly structured and impossible to use unmodified with standard personal accounting software.
+Deutsche Bank allows you to download account transactions, but the file formats they use are poorly structured and impossible to use with standard personal accounting software.
 
-I happen to use [You Need A Budget](http://www.youneedabudget.com/) (YNAB) for my personal finances, so these tools have been written to output files that YNAB understands. If you're using a different tool, and would like to collaborate, I'd love to receive pull requests!
+I happen to use [You Need A Budget](http://www.youneedabudget.com/) (YNAB) for my personal finances, so these tools have been written to output files that YNAB understands.
+
+If you're using a different tool, and would like to collaborate, I'd love to receive pull requests!
 
 ## konto.py
 
