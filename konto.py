@@ -5,9 +5,7 @@ import re
 import io
 import csv
 
-import chardet # @@ add to deps
-
-from pprint import pprint # @@ remove
+import chardet
 
 # Read stdin in binary mode
 in_file_b = sys.stdin.buffer.read()
