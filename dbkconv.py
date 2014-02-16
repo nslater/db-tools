@@ -72,7 +72,7 @@ in_file_enc = chardet.detect(in_file_b)
 # Attempt decoding
 in_file_s = in_file_b.decode(in_file_enc["encoding"])
 
-# Filter out garbage
+# Filter out the garbage
 csv_lines = []
 for line in in_file_s.split("\n"):
     if re.match("^\d+/\d+/\d+;", line):
