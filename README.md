@@ -14,7 +14,7 @@ If you're using a different tool, and would like to collaborate, I'd love to rec
 
 ### Purpose
 
-Convert a personal account CSV file to a YNAB account CSV file.
+Convert a DBK personal account CSV file to a YNAB account CSV file.
 
 ### Use
 
