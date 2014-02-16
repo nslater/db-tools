@@ -38,10 +38,14 @@ def convert(booked, cleared, details, debit, credit, currency):
     # Horrible bodge, but better than nothing!
     payee = " ".join(
         s for s in details.split() if not any(c.isdigit() for c in s))
+    # YNAB doesn't like signed values
+    debit = debit.replace("-", "")
     return [booked, payee, "", details, debit, credit]
 
 # Prepare to write to stdout
 writer = csv.writer(sys.stdout)
+
+writer.writerow(["Date", "Payee", "Category", "Memo", "Outflow", "Inflow"])
 
 # Convert all lines and output
 for line in reader:
