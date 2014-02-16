@@ -4,6 +4,7 @@ import sys
 import re
 import io
 import csv
+import datetime
 
 import chardet
 
@@ -34,13 +35,16 @@ reader = csv.reader(io.StringIO(csv_s), delimiter=";")
 
 def convert(booked, cleared, details, debit, credit, currency):
     "Convert from Deutsche Bank format to YNAB format"
+    # Convert date format from American to European
+    date = datetime.datetime.strptime(booked, "%m/%d/%Y")
+    date = date.strftime("%d/%m/%Y")
     # Remove any word with numbers in it
     # Horrible bodge, but better than nothing!
     payee = " ".join(
         s for s in details.split() if not any(c.isdigit() for c in s))
     # YNAB doesn't like signed values
     debit = debit.replace("-", "")
-    return [booked, payee, "", details, debit, credit]
+    return [date, payee, "", details, debit, credit]
 
 # Prepare to write to stdout
 writer = csv.writer(sys.stdout)
