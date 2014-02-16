@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Convert a DBK transaction CSV file to a YNAB account CSV file
+
 import sys
 import re
 import io
@@ -10,17 +12,13 @@ import chardet
 
 def help():
     "Print usage information and exit"
-    print("Usage: %s [-a|-c] < FILE")
+    print("Usage: %s [-a|-c] < FILE" % sys.argv[0])
     sys.exit(1)
 
 def error(msg):
     "Print error and exit"
     print("Error: %s" % msg)
     sys.exit(1)
-
-# Check that stdin is attached
-if sys.stdin.isatty():
-    error("nothing attached to stdin")
 
 # Grab our flag
 try:
@@ -60,6 +58,10 @@ elif flag == "c":
     convert = convert_cc
 else:
     help()
+
+# Check that stdin is attached
+if sys.stdin.isatty():
+    error("nothing attached to stdin")
 
 # Read stdin in binary mode
 in_file_b = sys.stdin.buffer.read()

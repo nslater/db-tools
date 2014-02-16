@@ -10,7 +10,7 @@ I happen to use [You Need A Budget](http://www.youneedabudget.com/) (YNAB) for m
 
 If you're using a different tool, and would like to collaborate, I'd love to receive pull requests!
 
-## convert.py
+## dbkconv.py
 
 ### Purpose
 
@@ -21,12 +21,12 @@ Convert a DBK transaction CSV file to a YNAB account CSV file.
 For account transactions, run:
 
 ```
-./konto.py -a < Transactions.csv
+./dbkconv.py -a < Transactions.csv
 ```
 For credit card transactions, run:
 
 ```
-./konto.py -c < Transactions.csv
+./dbkconv.py -c < Transactions.csv
 ```
 
 This will output a reformatted CSV file for use with YNAB.
