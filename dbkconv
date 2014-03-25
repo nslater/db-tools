@@ -36,7 +36,10 @@ def payee(str):
     "Get payee from transaction details"
     # Remove any word with numbers in it
     # Horrible bodge, but better than nothing!
-    return " ".join(s for s in str.split() if not any(c.isdigit() for c in s))
+    str = " ".join(s for s in str.split() if not any(c.isdigit() for c in s))
+    # Remove commas, as they trip up the parser
+    str = str.replace(",", "")
+    return str
 
 def unsign(str):
     "Get unsigned number"
