@@ -36,23 +36,26 @@ def payee(str):
     "Get payee from transaction details"
     # Remove any word with numbers in it
     # Horrible bodge, but better than nothing!
-    str = " ".join(s for s in str.split() if not any(c.isdigit() for c in s))
-    # Remove commas, as they trip up the parser
-    str = str.replace(",", "")
-    return str
+    return " ".join(s for s in str.split() if not any(c.isdigit() for c in s))
 
 def unsign(str):
     "Get unsigned number"
     # YNAB doesn't like signed values
-    return str.replace("-", "").strip()
+    return str.replace("-", "")
 
 def convert_account(date, cleared, desc, debit, credit, cur):
     "Convert from Deutsche Bank account format to YNAB format"
     return [fmt_date(date), payee(desc), "", desc, unsign(debit), credit]
 
-def convert_cc(date, cleared, payee, for_cur, for_debit, rate, debit, cur):
+def convert_cc(date, cleared, payee, for_cur, for_amount, rate, amount, cur):
     "Convert from Deutsche Bank credit card format to YNAB format"
-    return [fmt_date(date), payee, "", "", unsign(debit), ""]
+    if amount.startswith("-"):
+        debit = unsign(amount)
+        credit = ""
+    else:
+        debit = ""
+        credit = amount
+    return [fmt_date(date), payee, "", "", debit, credit]
 
 # Check for valid flag and set up convert function
 if flag == "a":
@@ -93,4 +96,4 @@ writer.writerow(["Date", "Payee", "Category", "Memo", "Outflow", "Inflow"])
 
 # Convert all lines and output
 for line in reader:
-    writer.writerow(convert(*line))
+    writer.writerow([item.strip() for item in convert(*line)])
