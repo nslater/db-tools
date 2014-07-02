@@ -10,6 +10,32 @@ import datetime
 
 import chardet
 
+# Account CSV header
+ACC_HEADER = """
+Booking date;
+Value date;
+Transaction Type;
+Beneficiary / Originator;
+Payment Details;
+IBAN;
+BIC;
+Customer Reference;
+Mandate Reference;
+Creditor ID;
+Compensation amount;
+Original Amount;
+Ultimate creditor;
+Debit;
+Credit;
+Currency
+""".replace("\n", "")
+
+# Account CSV offset values
+ACC_BOOKING_DATE = 0
+ACC_PAYMENT_DETAILS = 4
+ACC_DEBIT = 12
+ACC_CREDIT = 13
+
 def help():
     "Print usage information and exit"
     print("Usage: %s [-a|-c] < FILE" % sys.argv[0])
@@ -41,26 +67,27 @@ def payee(str):
 def unsign(str):
     "Get unsigned number"
     # YNAB doesn't like signed values
-    return str.replace("-", "")
+    return str.replace("-", "").strip()
 
-def convert_account(date, cleared, desc, debit, credit, cur):
+def convert_account(row):
     "Convert from Deutsche Bank account format to YNAB format"
-    return [fmt_date(date), payee(desc), "", desc, unsign(debit), credit]
+    date = fmt_date(row[ACC_BOOKING_DATE])
+    desc = payee(row[ACC_PAYMENT_DETAILS])
+    debit = unsign(row[ACC_DEBIT])
+    credit = row[ACC_CREDIT]
+    return [date, desc, "", desc, debit, credit]
 
-def convert_cc(date, cleared, payee, for_cur, for_amount, rate, amount, cur):
+def convert_cc(row):
+    date, cleared, payee, for_cur, for_debit, rate, debit, cur
     "Convert from Deutsche Bank credit card format to YNAB format"
-    if amount.startswith("-"):
-        debit = unsign(amount)
-        credit = ""
-    else:
-        debit = ""
-        credit = amount
-    return [fmt_date(date), payee, "", "", debit, credit]
+    return [fmt_date(date), payee, "", "", unsign(debit), ""]
 
 # Check for valid flag and set up convert function
 if flag == "a":
+    header = ACC_HEADER
     convert = convert_account
 elif flag == "c":
+    header = CC_HEADER
     convert = convert_cc
 else:
     help()
@@ -78,12 +105,20 @@ in_file_enc = chardet.detect(in_file_b)
 # Attempt decoding
 in_file_s = in_file_b.decode(in_file_enc["encoding"])
 
+# Set sanity check flag
+sane = False
+
 # Filter out the garbage
 csv_lines = []
 for line in in_file_s.split("\n"):
+    if line == header:
+        sane = True
     if re.match("^\d+/\d+/\d+;", line):
         csv_lines.append(line)
 csv_s = "\n".join(csv_lines)
+
+if not sane:
+    raise error("CSV format failed sanity check!")
 
 # Parse as a CSV file
 reader = csv.reader(io.StringIO(csv_s), delimiter=";")
@@ -95,5 +130,5 @@ writer = csv.writer(sys.stdout)
 writer.writerow(["Date", "Payee", "Category", "Memo", "Outflow", "Inflow"])
 
 # Convert all lines and output
-for line in reader:
-    writer.writerow([item.strip() for item in convert(*line)])
+for row in reader:
+    writer.writerow(convert(row))
