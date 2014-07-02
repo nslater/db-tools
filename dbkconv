@@ -36,6 +36,23 @@ ACC_PAYMENT_DETAILS = 4
 ACC_DEBIT = 13
 ACC_CREDIT = 14
 
+# Credit card CSV header
+CC_HEADER = """
+Voucher date;
+Date of receipt;
+Reason for payment;
+Foreign currency;
+Amount;
+Exchange rate;
+Amount;
+Currency
+""".replace("\n", "")
+
+# Credit card CSV offset values
+VOUCHER_DATE = 0
+REASON = 2
+AMOUNT = 6
+
 def help():
     "Print usage information and exit"
     print("Usage: %s [-a|-c] < FILE" % sys.argv[0])
@@ -78,9 +95,11 @@ def convert_account(row):
     return [date, desc, "", desc, debit, credit]
 
 def convert_cc(row):
-    date, cleared, payee, for_cur, for_debit, rate, debit, cur
     "Convert from Deutsche Bank credit card format to YNAB format"
-    return [fmt_date(date), payee, "", "", unsign(debit), ""]
+    date = fmt_date(row[VOUCHER_DATE])
+    payee = row[REASON]
+    debit = unsign(row[AMOUNT])
+    return [date, payee, "", "", debit, ""]
 
 # Check for valid flag and set up convert function
 if flag == "a":
