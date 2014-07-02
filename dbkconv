@@ -33,8 +33,8 @@ Currency
 # Account CSV offset values
 ACC_BOOKING_DATE = 0
 ACC_PAYMENT_DETAILS = 4
-ACC_DEBIT = 12
-ACC_CREDIT = 13
+ACC_DEBIT = 13
+ACC_CREDIT = 14
 
 def help():
     "Print usage information and exit"
