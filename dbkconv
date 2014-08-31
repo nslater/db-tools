@@ -129,20 +129,20 @@ in_file_enc = chardet.detect(in_file_b)
 # Attempt decoding
 in_file_s = in_file_b.decode(in_file_enc["encoding"])
 
-# Set sanity check flag
-sane = False
+# Set well-formed flag
+well_formed = False
 
 # Filter out the garbage
 csv_lines = []
 for line in in_file_s.split("\n"):
     if line == header:
-        sane = True
+        well_formed = True
     if re.match("^\d+/\d+/\d+;", line):
         csv_lines.append(line)
 csv_s = "\n".join(csv_lines)
 
-if not sane:
-    raise error("CSV format failed sanity check!")
+if not well_formed:
+    raise error("CSV file is not well-formed!")
 
 # Parse as a CSV file
 reader = csv.reader(io.StringIO(csv_s), delimiter=";")
