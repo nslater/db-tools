@@ -98,8 +98,13 @@ def convert_cc(row):
     "Convert from Deutsche Bank credit card format to YNAB format"
     date = fmt_date(row[VOUCHER_DATE])
     payee = row[REASON]
-    debit = unsign(row[AMOUNT])
-    return [date, payee, "", "", debit, ""]
+    if "-" in row[AMOUNT]:
+        debit = unsign(row[AMOUNT])
+        credit = ""
+    else:
+        debit = ""
+        credit = unsign(row[AMOUNT])
+    return [date, payee, "", "", debit, credit]
 
 # Check for valid flag and set up convert function
 if flag == "a":
