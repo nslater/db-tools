@@ -32,6 +32,7 @@ Currency
 
 # Account CSV offset values
 ACC_BOOKING_DATE = 0
+ACC_BENEFICIARY = 3
 ACC_PAYMENT_DETAILS = 4
 ACC_DEBIT = 13
 ACC_CREDIT = 14
@@ -75,8 +76,12 @@ def fmt_date(date):
     date = date.strftime("%d/%m/%Y")
     return date
 
-def payee(str):
+def payee(beneficiary, details):
     "Get payee from transaction details"
+    # Remove repetition
+    details = details.replace(beneficiary, "")
+    # Join fields to get some semblance of a payee
+    str = " ".join([beneficiary, details])
     # Remove any word with numbers in it
     # Horrible bodge, but better than nothing!
     return " ".join(s for s in str.split() if not any(c.isdigit() for c in s))
@@ -89,10 +94,10 @@ def unsign(str):
 def convert_account(row):
     "Convert from Deutsche Bank account format to YNAB format"
     date = fmt_date(row[ACC_BOOKING_DATE])
-    desc = payee(row[ACC_PAYMENT_DETAILS])
+    desc = payee(row[ACC_BENEFICIARY], row[ACC_PAYMENT_DETAILS])
     debit = unsign(row[ACC_DEBIT])
     credit = row[ACC_CREDIT]
-    return [date, desc, "", desc, debit, credit]
+    return [date, desc, "", "", debit, credit]
 
 def convert_cc(row):
     "Convert from Deutsche Bank credit card format to YNAB format"
