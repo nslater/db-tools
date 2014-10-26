@@ -64,12 +64,6 @@ def error(msg):
     print("Error: %s" % msg)
     sys.exit(1)
 
-# Grab our flag
-try:
-    flag = sys.argv[1].replace("-", "")
-except:
-    help()
-
 def fmt_date(date):
     "Switch date format from American to European"
     date = datetime.datetime.strptime(date, "%m/%d/%Y")
@@ -111,6 +105,13 @@ def convert_cc(row):
         credit = unsign(row[AMOUNT])
     return [date, payee, "", "", debit, credit]
 
+
+# Grab our flag
+try:
+    flag = sys.argv[1].replace("-", "")
+except:
+    help()
+
 # Check for valid flag and set up convert function
 if flag == "a":
     header = ACC_HEADER
@@ -121,12 +122,14 @@ elif flag == "c":
 else:
     help()
 
-# Check that stdin is attached
-if sys.stdin.isatty():
-    error("nothing attached to stdin")
+# Check that a filename is passed
+try:
+    in_filename = sys.argv[2]
+except:
+    help()
 
 # Read stdin in binary mode
-in_file_b = sys.stdin.buffer.read()
+in_file_b = open(in_filename, "rb").read()
 
 # Guess encoding
 in_file_enc = chardet.detect(in_file_b)
