@@ -105,26 +105,9 @@ def convert_cc(row):
         credit = unsign(row[AMOUNT])
     return [date, payee, "", "", debit, credit]
 
-
-# Grab our flag
-try:
-    flag = sys.argv[1].replace("-", "")
-except:
-    help()
-
-# Check for valid flag and set up convert function
-if flag == "a":
-    header = ACC_HEADER
-    convert = convert_account
-elif flag == "c":
-    header = CC_HEADER
-    convert = convert_cc
-else:
-    help()
-
 # Check that a filename is passed
 try:
-    in_filename = sys.argv[2]
+    in_filename = sys.argv[1]
 except:
     help()
 
@@ -140,10 +123,16 @@ in_file_s = in_file_b.decode(in_file_enc["encoding"])
 # Set well-formed flag
 well_formed = False
 
+convert = None
+
 # Filter out the garbage
 csv_lines = []
 for line in in_file_s.split("\n"):
-    if line == header:
+    if line == ACC_HEADER:
+        convert = convert_account
+        well_formed = True
+    if line == CC_HEADER:
+        convert = convert_cc
         well_formed = True
     if re.match("^\d+/\d+/\d+;", line):
         csv_lines.append(line)
