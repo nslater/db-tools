@@ -25,6 +25,7 @@ Creditor ID;
 Compensation amount;
 Original Amount;
 Ultimate creditor;
+Number of transactions; 
 Debit;
 Credit;
 Currency
@@ -34,8 +35,8 @@ Currency
 ACC_BOOKING_DATE = 0
 ACC_BENEFICIARY = 3
 ACC_PAYMENT_DETAILS = 4
-ACC_DEBIT = 13
-ACC_CREDIT = 14
+ACC_DEBIT = 14
+ACC_CREDIT = 15
 
 # Credit card CSV header
 CC_HEADER = """
