@@ -77,6 +77,8 @@ def payee(beneficiary, details):
     details = details.replace(beneficiary, "")
     # Join fields to get some semblance of a payee
     str = " ".join([beneficiary, details])
+    # if you want to see less data in details just remove numbers like nslater was doing:
+    # return " ".join(s for s in str.split() if not any(c.isdigit() for c in s))
     return str
 
 def unsign(str):
