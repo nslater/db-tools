@@ -25,6 +25,7 @@ Creditor ID;
 Compensation amount;
 Original Amount;
 Ultimate creditor;
+Number of transactions;
 Debit;
 Credit;
 Currency
@@ -34,8 +35,8 @@ Currency
 ACC_BOOKING_DATE = 0
 ACC_BENEFICIARY = 3
 ACC_PAYMENT_DETAILS = 4
-ACC_DEBIT = 13
-ACC_CREDIT = 14
+ACC_DEBIT = 14
+ACC_CREDIT = 15
 
 # Credit card CSV header
 CC_HEADER = """
@@ -76,9 +77,9 @@ def payee(beneficiary, details):
     details = details.replace(beneficiary, "")
     # Join fields to get some semblance of a payee
     str = " ".join([beneficiary, details])
-    # Remove any word with numbers in it
-    # Horrible bodge, but better than nothing!
-    return " ".join(s for s in str.split() if not any(c.isdigit() for c in s))
+    # if you want to see less data in details just remove numbers like nslater was doing:
+    # return " ".join(s for s in str.split() if not any(c.isdigit() for c in s))
+    return str
 
 def unsign(str):
     "Get unsigned number"

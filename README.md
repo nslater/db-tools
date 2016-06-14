@@ -18,21 +18,17 @@ Convert a DBK transaction CSV file to a YNAB account CSV file.
 
 ### Use
 
-For account transactions, run:
+For normal account transactions, run:
 
 ```
-./dbkconv.py -a Transactions.csv
-```
-For credit card transactions, run:
-
-```
-./dbkconv.py -c Transactions.csv
+./dbkconv.py Input_Transaction.csv > CleanTransaction.csv
 ```
 
 This will output a reformatted CSV file for use with YNAB.
 
 ### Dependencies
 
+- [pyenv](https://github.com/yyuu/pyenv) (optional, but I highly suggest using it)
 - Python 3
 - [chardet](https://pypi.python.org/pypi/chardet)
 
