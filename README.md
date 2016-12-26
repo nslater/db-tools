@@ -1,6 +1,8 @@
 # dbk-tools
 
-Tools for working with Deutsche Bank file formats
+Tools for working with Deutsche Bank file formats.
+
+**NOTE**: I am no longer a customer of Deutsche Bank so I have no use for this tool. I will continue to accept pull requests but I do not intend to work on it any further. If someone wants to fork and maintain, I will happily update this README to point to the active fork.
 
 ## Introduction
 
